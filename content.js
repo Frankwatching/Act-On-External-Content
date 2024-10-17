@@ -1,5 +1,5 @@
 // ##  Set local version
-let versionid = "3.3.7";
+let versionid = "3.3.8";
 
 var today = new Date();
 var dd = String(today.getDate()).padStart(2, '0');
@@ -415,17 +415,11 @@ async function productItem(item, index) {
   var newsLetterUTMCampaignName = json["postmeta:newsLetterUTMCampaignName"]; 
   var newsletterIntroTekst = json["postmeta:newsletterIntroTekst"]; 
 
-
-  /*$new_post->useAlternatives = get_field('gebruik_alternatief', $id);
-					$new_post->altnewsletterTitle = get_field('product_alt_newsletter_title', $id);
-                    $new_post->altnewsletterIntroTekst = get_field('product_alt_newsletter_intro', $id);
-                    $new_post->altnewsLetterUTMCampaignName = get_field('product_alt_newsletter_utm_campaign_name', $id);
-                    $new_post->altnewsLetterImage = get_field('product_alt_newsletter_image', $id); */
-  var useAlternatives = json["postmeta:useAlternatives"]; 
   var altnewsletterTitle = json["postmeta:altNewsletterTitle"]; 
   var altnewsLetterUTMCampaignName = json["postmeta:altNewsLetterUTMCampaignName"]; 
   var altnewsletterIntroTekst = json["postmeta:altNewsletterIntroTekst"]; 
   var altnewsletterImage = json["postmeta:altNewsLetterImage"]; 
+  var altnewsletterImageLarge = json["postmeta:altNewsLetterImageLarge"]; 
 
 
     // haal nieuwsbrief titel op
@@ -454,6 +448,8 @@ async function productItem(item, index) {
   }
 
   var item_img_klein = json["image_small"];
+  var item_img_alternative = json["image_product_overview"];
+  var item_img_alternative_large = json["altNewsLetterImageLarge"];
   var item_img_groot = json["image_large"];
 
   //invoer
@@ -470,7 +466,7 @@ async function productItem(item, index) {
   item_categorie += '</div>';
   item_categorie += '<div style="background:white;">';
   //toon weergave pulldown
-  item_categorie += '<span class="extraOptionsWeergave"><select id="selectOptionWeergaveProduct'+postid+'"><option value="">1.Kies weergave</option><option value="klein">Afb. links</option><option value="groot">Afb. boven</option><option value="grootcta">Afb. boven + CTA</option><option value="headline">Headline</option><option value="campagnebalk">Campagnebalk</option></select></span>';
+  item_categorie += '<span class="extraOptionsWeergave"><select id="selectOptionWeergaveProduct'+postid+'"><option value="">1.Kies weergave</option><optgroup label="Standaard content"><option value="klein">Afb. links</option><option value="groot">Afb. boven</option><option value="grootcta">Afb. boven + CTA</option><option value="headline">Headline</option><option value="campagnebalk">Campagnebalk</option></optgroup><optgroup label="Alternatieve content"><option value="kleinalt">Afb. links ALT</option><option value="grootalt">Afb. boven ALT</option></option></select></span>';
 
   item_categorie += '<span class="extraOptions"><select id="selectOptionProduct'+postid+'"><option value="adv">2.Kies utm content</option><optgroup label="Agenda"><option value="agenda">agenda</option></optgroup><optgroup label="Academy"><option value="adv">adv</option><option value="advactueel">advactueel</option><option value="advthema">advthema</option></optgroup><optgroup label="Headline"><option value="headlineadv">headlineadv</option><option value="headlineadvactueel">headlineadvactueel</option><option value="headlineadvthema">headlineadvthema</option><option value="headlineonder">headlineonder</option></optgroup></select></span>';
   item_categorie += '<span class="extraOptionsLabel"><select id="selectOptionLabelProduct'+postid+'"><option value="">3.Kies label</option><option value="themavdweek">Thema vd week</option><option value="adv">Adv</option><option value="tip">TIP</option></select></span>';
@@ -489,16 +485,6 @@ async function productItem(item, index) {
   div.className = 'dragrow ' + labelNameLowercase ;
   div.id = labelNameLowercase+postid;
   div.draggable = 'true';
-
-
-    //show alternative campagne data
-    if (useAlternatives == 'ja') {
-      item_title = altnewsletterTitle;
-      item_description = altnewsletterIntroTekst;
-      utmcampaign = altnewsLetterUTMCampaignName;
-      item_img_groot = altnewsletterImage;
-  
-    }
 
   productItemKleinContainerContent.appendChild(divCat);
   productItemKleinContainerContent.appendChild(div);
@@ -523,6 +509,9 @@ async function productItem(item, index) {
       } else {
           console.error("Element with ID 'imgPost" + postid + "Link' not found.");
       }
+
+
+      
 
       // Update metaPost
       let metaPost = document.getElementById('metaPost' + postid + 'Link');
@@ -648,7 +637,7 @@ var selectElementWeergave = document.getElementById('selectOptionWeergaveProduct
         weergave = `<table class="table1a">
         <tbody>
           <tr>
-            <td class="tableDivider1a"><a id="imgKleinArtikel${postid}Link" href="${item_link}"><img id="imgKleinArtikel${postid}a" class="imgKleinArtikela" style="border-radius: 4px;object-fit: cover;height: auto; width: 100%; display: block;" height="175" src="${item_img_groot}" /></a></td>
+            <td class="tableDivider1a"><a id="imgKleinArtikel${postid}Link" href="${item_link}"><img id="imgKleinArtikel${postid}a" class="imgKleinArtikela" style="border-radius: 4px;object-fit: cover;height: auto; width: 100%; display: block;" height="175" src="${item_img_alternative}" /></a></td>
           </tr>
         </tbody>
         </table>
@@ -656,7 +645,7 @@ var selectElementWeergave = document.getElementById('selectOptionWeergaveProduct
         <tbody>
           <tr>
             <td class="tableDivider1" width="0px" height="auto" style="padding-bottom: 20px;">
-              <div class="tdDiv"><a id="imgKlein${postid}Link" href="${item_link}"><img id="imgKleinArtikel${postid}" class="imgKleinArtikel" style="border-radius: 4px;object-fit: cover;display: none; height: 150px; width: 175px;" width="175" src="${item_img_groot}" /></a></div>
+              <div class="tdDiv"><a id="imgKlein${postid}Link" href="${item_link}"><img id="imgKleinArtikel${postid}" class="imgKleinArtikel" style="border-radius: 4px;object-fit: cover;display: none;    background: #000000; height: 150px; width: 175px;" width="175" src="${item_img_alternative}" /></a></div>
             </td>
             <td class="tableDivider2" height="auto" width="auto" style="vertical-align: top; padding-bottom: 20px;">
               <table class="tableC">
@@ -676,6 +665,63 @@ var selectElementWeergave = document.getElementById('selectOptionWeergaveProduct
           </tr>
         </tbody>
         </table>`;
+
+      } else if (optionlabel === 'kleinalt') {
+        selectElementLabel.selectedIndex = 0;
+        // Reset labels
+        label_adv = '';
+        label_tip = '';
+        label_themavdweek = '';
+        typeweergave = 'kleinalt';
+
+        
+        if (!altnewsletterImage) {
+          item_img_alternative = item_img_alternative;
+         } else {
+          item_img_alternative = altnewsletterImage;
+      
+         }
+
+         
+        if (!altnewsletterImageLarge) {
+          item_img_alternative_large = item_img_alternative_large;
+         } else {
+          item_img_alternative_large = altnewsletterImage;
+      
+         }
+
+        weergave = `<table class="table1a">
+        <tbody>
+          <tr>
+            <td class="tableDivider1a"><a id="imgKleinArtikel${postid}Link" href="${item_link}"><img id="imgKleinArtikel${postid}a" class="imgKleinArtikela" style="border-radius: 4px;object-fit: cover;height: auto; width: 100%; display: block;" height="175" src="${item_img_alternative_large}" /></a></td>
+          </tr>
+        </tbody>
+        </table>
+        <table>
+        <tbody>
+          <tr>
+            <td class="tableDivider1" width="0px" height="auto" style="padding-bottom: 20px;">
+              <div class="tdDiv"><a id="imgKlein${postid}Link" href="${item_link}"><img id="imgKleinArtikel${postid}" class="imgKleinArtikel" style="border-radius: 4px;object-fit: cover;display: none;    background: #000000; height: 150px; width: 175px;" width="175" src="${item_img_alternative}" /></a></div>
+            </td>
+            <td class="tableDivider2" height="auto" width="auto" style="vertical-align: top; padding-bottom: 20px;">
+              <table class="tableC">
+                <tbody>
+                  <tr>
+                    <td class="artikelKleinTDcA">
+                    <span id="container_label_adv${postid}">${label_adv}</span>
+                    <span id="container_label_themavdweek${postid}">${label_themavdweek}</span>
+                    <a id="kleinTitleLink${postid}" class="titleKleinArtikel" style="color: #1a1a1a; line-height: 1.3; margin-top: 0px; margin-bottom: 7px; top: 0px; display: block; font-size: 14pt; font-weight: 700; font-family: 'Roboto', Arial;text-decoration: none;" href="${item_link}">${altnewsletterTitle} <span id="container_label_tip${postid}">${label_tip}</span></a></td>
+                  </tr>
+                  <tr>
+                    <td><a id="DescriptionKleinArtikel${postid}" class="DescriptionKleinArtikel" style="color: #333333; font-size: 16px; line-height: 1.3; font-weight: regular; font-family: 'Roboto', Arial;text-decoration: none;" href="${item_link}">${altnewsletterIntroTekst} <span id="KleinArtikelCTA${postid}" class="KleinArtikelCTA" style="text-decoration: none; color: #18608b; font-size: 12pt;"> Lees meer ▸</span></a></td>
+                  </tr>
+                </tbody>
+              </table>
+            </td>
+          </tr>
+        </tbody>
+        </table>`;
+
       } else if (optionlabel === 'campagnebalk') {
 
       
@@ -711,7 +757,7 @@ var selectElementWeergave = document.getElementById('selectOptionWeergaveProduct
             <tr id="artikelGroot${postid}TrB">
             <td id="artikelGroot${postid}TdB">
                 <a style="padding: 0px;" id="imgPost${postid}Link" href="${item_link}">
-                <img id="grootArtikelImg1" class="grootArtikelImg" style="border-radius: 4px;display: block; width: 100%;margin-bottom: 15px; height: auto; min-height: 192px; object-fit: cover; background: #ffffff;" height="229" src="${item_img_groot}" >
+                <img id="grootArtikelImg1" class="grootArtikelImg" style="border-radius: 4px;display: block; width: 100%;margin-bottom: 15px; height: auto; min-height: 192px; max-height: 229px;object-fit: cover; background: #000000;" height="229" src="${item_img_alternative}" >
                 </a>
               </td>
             </tr>
@@ -733,7 +779,60 @@ var selectElementWeergave = document.getElementById('selectOptionWeergaveProduct
           </table>
       `;      
 
+      }  else if (optionlabel === 'grootalt') {
+        selectElementLabel.selectedIndex = 0;
+        // Reset labels
+        label_adv = '';
+        label_tip = '';
+        label_themavdweek = '';
+        typeweergave = 'grootalt';
+
+        if (!altnewsletterImage) {
+          item_img_alternative = item_img_alternative;
+         } else {
+          item_img_alternative = altnewsletterImage;
       
+         }
+
+          
+        if (!altnewsletterImageLarge) {
+          item_img_alternative_large = item_img_alternative_large;
+         } else {
+          item_img_alternative_large = altnewsletterImage;
+      
+         }
+
+        weergave = `<table id="artikelGroot${postid}T" style=" display: block;">
+          <tbody id="artikelGroot${postid}Tb">
+            <tr id="artikelGroot${postid}TrB">
+            <td id="artikelGroot${postid}TdB">
+                <a style="padding: 0px;" id="imgPost${postid}Link" href="${item_link}">
+                <img id="grootArtikelImg1" class="grootArtikelImg" style="border-radius: 4px;display: block; width: 100%;margin-bottom: 15px; height: auto; min-height: 192px;max-height: 229px; object-fit: cover; background: #000;" height="229" src="${item_img_alternative_large}" >
+                </a>
+              </td>
+            </tr>
+            <tr id="artikelGroot${postid}TrA">
+            <td id="artikelGroot${postid}TdA">
+            <span id="container_label_themavdweek${postid}">${label_themavdweek}</span>
+              <a id="grootTitleLink${postid}" class="grootArtikelTitle" style="color: #1a1a1a; display: block; line-height: 1.5; font-size: 18px; padding: 0px 0px 0px 0px; font-weight: 700;text-decoration: none;" href="${item_link}">
+                ${altnewsletterTitle} <span id="container_label_adv${postid}">${label_adv}</span>  <span id="container_label_tip${postid}">${label_tip}</span>
+              </a>
+            </td>
+            </tr>
+            <tr id="artikelGroot${postid}TrC">
+            <td id="artikelGroot${postid}TdC" style="padding-bottom: 5px;">
+                <a id="grootArtikelDescription${postid}" class="grootArtikelDescription" href="${item_link}" style="color: #333333; font-size: 16px;line-height: 1.3; display: inline; padding: 0px 0px 0px 0px;font-weight: 400;text-decoration: none;">
+                  <span style="font-size: 16px; color: #333333;font-weight: 400;">
+                    ${alt}
+                  </span>
+               
+                <span id="GrootArtikelCTA${postid}" class="GrootArtikelCTA" style="display: inline; font-size: 16px; line-height: 1.3; text-decoration: none; color: #18608b;font-weight: 400;"> Lees meer ▸</span></a>
+              </td>
+            </tr>
+          </tbody>
+          </table>
+      `;
+    
       } else if (optionlabel === 'groot') {
         selectElementLabel.selectedIndex = 0;
         // Reset labels
@@ -746,7 +845,7 @@ var selectElementWeergave = document.getElementById('selectOptionWeergaveProduct
             <tr id="artikelGroot${postid}TrB">
             <td id="artikelGroot${postid}TdB">
                 <a style="padding: 0px;" id="imgPost${postid}Link" href="${item_link}">
-                <img id="grootArtikelImg1" class="grootArtikelImg" style="border-radius: 4px;display: block; width: 100%;margin-bottom: 15px; height: auto; min-height: 192px; object-fit: cover; background: #ffffff;" height="229" src="${item_img_groot}" >
+                <img id="grootArtikelImg1" class="grootArtikelImg" style="border-radius: 4px;display: block; width: 100%;margin-bottom: 15px; height: auto; min-height: 192px;max-height: 229px; object-fit: cover; background: #000;" height="229" src="${item_img_alternative}" >
                 </a>
               </td>
             </tr>
@@ -824,7 +923,7 @@ var selectElementWeergave = document.getElementById('selectOptionWeergaveProduct
         } else if (typeweergave === 'headline' && optionlabel === 'adv') {
           styling = 'display: inline; border: 1px solid #018a00; color: #018a00; padding: 1px 2px; font-size: 9px;';
         } else if (typeweergave === 'headline' && optionlabel === 'tip') {
-          styling = 'display: inline; border: 1px solid #018a00; color: #018a00; padding: 1px 2px; font-size: 9px;';
+          styling = 'display: inline; border: 1px solid #757575; color: #757575; padding: 1px 2px; font-size: 9px;';
         } else if (typeweergave === 'headline' && optionlabel === 'themavdweek') {
           styling = 'display: inline; border: 1px solid #018a00; color: #018a00; font-size: 11px; vertical-align: middle; padding: 2px 6px;';
         } else if (typeweergave === 'agenda' && optionlabel === 'adv') {
@@ -888,6 +987,8 @@ var selectElementWeergave = document.getElementById('selectOptionWeergaveProduct
       } else {
       console.error("Element with ID 'selectOptionLabelProduct" + postid + "' not found.");
     }
+
+    
 
    document.getElementById(labelNameLowercase + postid).ondragstart = function (event) {
        event
@@ -1164,7 +1265,7 @@ async function blogItems(item, index) {
           <tr id="artikelGroot${postid}TrB">
           <td id="artikelGroot${postid}TdB">
               <a style="padding: 0px;" id="imgPost${postid}Link" href="${item_link}">
-              <img id="grootArtikelImg1" class="grootArtikelImg" style="border-radius: 4px;display: block; width: 100%;margin-bottom: 15px; height: auto; min-height: 192px; object-fit: cover; background: #ffffff;" height="229" src="${item_img_groot}" >
+              <img id="grootArtikelImg1" class="grootArtikelImg" style="border-radius: 4px;display: block; width: 100%;margin-bottom: 15px; height: auto; min-height: 192px; max-height: 229px; object-fit: cover; background: #000;" height="229" src="${item_img_groot}" >
               </a>
             </td>
           </tr>
@@ -1235,7 +1336,7 @@ async function blogItems(item, index) {
       } else if (typeweergave === 'headline' && optionlabel === 'adv') {
         styling = 'display: inline; border: 1px solid #018a00; color: #018a00; padding: 1px 2px; font-size: 9px;';
       } else if (typeweergave === 'headline' && optionlabel === 'tip') {
-        styling = 'display: inline; border: 1px solid #018a00; color: #018a00; padding: 1px 2px; font-size: 9px;';
+        styling = 'display: inline; border: 1px solid #757575; color: #757575; padding: 1px 2px; font-size: 9px;';
       } else if (typeweergave === 'headline' && optionlabel === 'themavdweek') {
         styling = 'display: inline; border: 1px solid #018a00; color: #018a00; font-size: 11px; vertical-align: middle; padding: 2px 6px;';
       } else {
@@ -1617,7 +1718,7 @@ async function functionJobItems(item) {
               <tr id="artikelGroot${postid}TrB">
                 <td id="artikelGroot${postid}TdB">
                   <a style="padding: 0px;" id="imgPost${postid}Link" href="${item_link}">
-                    <img id="grootArtikelImg1" class="grootArtikelImg" style="border-radius: 4px;object-fit: contain;display: block; width: 100%;margin-bottom: 15px; height: auto; min-height: 192px;max-height: 192px; background: #ffffff; " src="${item_img_groot}" >
+                    <img id="grootArtikelImg1" class="grootArtikelImg" style="border-radius: 4px;object-fit: contain;display: block; width: 100%;margin-bottom: 15px; height: auto; min-height: 192px;max-height: 229px; background: #f4f4f4; " heigth="229" src="${item_img_groot}" >
                   </a>
                 </td>
               </tr>
@@ -1702,7 +1803,7 @@ async function functionJobItems(item) {
           } else if (typeweergave === 'headline' && optionlabel === 'adv') {
             styling = 'display: inline; border: 1px solid #018a00; color: #018a00; padding: 1px 2px; font-size: 9px;';
           } else if (typeweergave === 'headline' && optionlabel === 'tip') {
-            styling = 'display: inline; border: 1px solid #018a00; color: #018a00; padding: 1px 2px; font-size: 9px;';
+            styling = 'display: inline; border: 1px solid #757575; color: #757575; padding: 1px 2px; font-size: 9px;';
           } else if (typeweergave === 'headline' && optionlabel === 'themavdweek') {
             styling = 'display: inline; border: 1px solid #018a00; color: #018a00; font-size: 11px; vertical-align: middle; padding: 2px 6px;';
           } else {
@@ -1773,7 +1874,7 @@ function ThemanieuwsbrievenData() {
       { id: 3, title: "Content", content: "Ontvang 2 keer per maand een update over content met een vleugje power, magie en creativiteit.", logourl: "https://service.frankwatching.com/cdnr/aiepci5/acton/attachment/42767/f-6c84e118-079b-43e0-8ba0-b76b55813e91/1/-/-/-/-/Thema%20nieuwsbrief%20FW%20-%20emailfooter%20-%20blok%20-%20content.png", buttontext: "Aanmelden", buttonurl: "https://service.frankwatching.com/acton/eform/42767/087e7bbd-4384-4a7c-bca2-bf45382ef78d/d-ext-0001?Emailadres={{Emailadres}}&amp;Thema={{Thema}}%2CA:156" },
       { id: 4, title: "Marketing", content: "Marketing minds opgelet! Ontvang 2 keer per maand een update over marketingthema's die je niet wil missen.", logourl: "https://service.frankwatching.com/cdnr/aiepci5/acton/attachment/42767/f-e05e9a48-c784-4fd8-905b-d030a18ca195/1/-/-/-/-/Thema%20nieuwsbrief%20FW%20-%20emailfooter%20-%20blok%20-%20marketing.png", buttontext: "Aanmelden", buttonurl: "https://service.frankwatching.com/acton/eform/42767/087e7bbd-4384-4a7c-bca2-bf45382ef78d/d-ext-0001?Emailadres={{Emailadres}}&amp;Thema={{Thema}}%2CA:008" },
       { id: 5, title: "Mens & Werk", content: "Weet wat er speelt: ontvang elke 3 weken een update over ontwikkelingen in HR en arbeidsmarktcommunicatie", logourl: "https://service.frankwatching.com/cdnr/aiepci5/acton/attachment/42767/f-0407f930-97d6-4d35-8edd-046a960a6663/1/-/-/-/-/Thema%20nieuwsbrief%20FW%20-%20emailfooter%20-%20blok%20-%20mens%20%26%20werk.png", buttontext: "Aanmelden", buttonurl: "https://service.frankwatching.com/acton/eform/42767/087e7bbd-4384-4a7c-bca2-bf45382ef78d/d-ext-0001?Emailadres={{Emailadres}}&amp;Thema={{Thema}}%2CA:015" },
-      { id: 6, title: "Kijkt verder", content: "Blik op de toekomst: maandelijks een update over opvallende trends &amp; AI in digital marketing en communicatie.", logourl: "https://service.frankwatching.com/cdnr/aiepci5/acton/attachment/42767/f-6e83b7f7-3700-4573-8dec-908ba654f863/1/-/-/-/-/Thema%20nieuwsbrief%20FW%20-%20emailfooter%20-%20blok%20-%20kijkt%20verder.png", buttontext: "Aanmelden", buttonurl: "https://service.frankwatching.com/acton/eform/42767/087e7bbd-4384-4a7c-bca2-bf45382ef78d/d-ext-0001?Emailadres=%7B%7BEmailadres%7D%7D&amp;Thema=%7B%7BThema%7D%7D%2CA%3A003" },
+      { id: 6, title: "AI, Tech & Trends", content: "Blik op de toekomst: maandelijks een update over opvallende trends &amp; AI in digital marketing en communicatie.", logourl: "https://service.frankwatching.com/cdnr/aiepci5/acton/attachment/42767/f-6e83b7f7-3700-4573-8dec-908ba654f863/1/-/-/-/-/Thema%20nieuwsbrief%20FW%20-%20emailfooter%20-%20blok%20-%20kijkt%20verder.png", buttontext: "Aanmelden", buttonurl: "https://service.frankwatching.com/acton/eform/42767/087e7bbd-4384-4a7c-bca2-bf45382ef78d/d-ext-0001?Emailadres=%7B%7BEmailadres%7D%7D&amp;Thema=%7B%7BThema%7D%7D%2CA%3A003" },
       { id: 7, title: "Klantcontact 2.0", content: "Ontvang maandelijks een nieuwsbrief waar persoonlijke aandacht en innovatie centraal staan.", logourl: "https://service.frankwatching.com/cdnr/adepci3/acton/attachment/42767/f-7824e399-d7ab-4789-9c1d-05d7c43f6fa0/1/-/-/-/-/Thema%20nieuwsbrief%20FW%20-%20emailfooter%20-%20blok%20-%20klantcontact%202.0.png", buttontext: "Aanmelden", buttonurl: "https://service.frankwatching.com/acton/eform/42767/087e7bbd-4384-4a7c-bca2-bf45382ef78d/d-ext-0001?Emailadres={{Emailadres}}&amp;Thema={{Thema}}%2CA:007" }
   ];
 }
@@ -1863,6 +1964,8 @@ async function functionThemaItems(item) {
 // ## LOAD MARKETING
 "use strict";
 async function loadMarketing() {
+  const promotionTypesToFilter = ["dnb_advertorial", "wnb_advertorial"]; // Define the promotion types to filter for
+
   try {
     const response = await fetch(marketingrestapi); // Fetch data from WordPress REST API
     if (!response.ok) {
@@ -1877,9 +1980,15 @@ async function loadMarketing() {
     }
 
     if (Array.isArray(jsonData)) {
-      jsonData.forEach(item => functionCamsItems(item)); // Process each item in the array
+      jsonData.forEach(item => {
+        if (item.acf && promotionTypesToFilter.includes(item.acf.promotion_type)) {
+          functionCamsItems(item); // Process each item that matches any of the promotion types
+        }
+      });
     } else {
-      functionCamsItems(jsonData); // Process the single item
+      if (jsonData.acf && promotionTypesToFilter.includes(jsonData.acf.promotion_type)) {
+        functionCamsItems(jsonData); // Process the single item that matches any of the promotion types
+      }
     }
   } catch (error) {
     console.error("Error loading marketing:", error);
@@ -1887,7 +1996,7 @@ async function loadMarketing() {
 
 }
 
-//loadMarketing();
+loadMarketing();
 
 
 async function functionCamsItems(item) {
@@ -1900,7 +2009,7 @@ async function functionCamsItems(item) {
   var selectName = 'Marketing';
   var utmtaglowercase = 'blog';
   var labelNameLowercase = 'camsitem';
-  var option ='cams';
+  let option ='cams';
 
 
   //const pubdate = item.querySelector("pubDate").innerHTML.split("+")[0];
@@ -1912,7 +2021,7 @@ async function functionCamsItems(item) {
   
   let promotion_title = item.acf.promotion_title;
   if (!promotion_title) {
-    promotion_title = 'Vul titel in in cams';
+    promotion_title = item_title;
   }
   // Campagnebalk titel  
   let promotion_announcement = item.acf.promotion_announcement;
@@ -1924,6 +2033,20 @@ async function functionCamsItems(item) {
   if (!promotion_url) {
     promotion_url = 'Missende url';
   }
+
+  // Promo utm  
+  let promotion_utmcampaignname = item.acf.promotion_utmcampaignname;
+  if (!promotion_utmcampaignname) {
+    promotion_utmcampaignname = 'missendeUTMcampagne';
+  }
+
+   // Promo id  
+   let promotion_product_id = item.acf.promotion_product_id;
+   if (!promotion_product_id) {
+    promotion_product_id = '';
+   }
+
+   
   // Promotion_textarea  
   let promotion_intro = item.acf.promotion_intro;
   if (!promotion_intro) {
@@ -1933,16 +2056,25 @@ async function functionCamsItems(item) {
   const promotion_image = item.acf.promotion_image;
   // Promo CTA tekst 
   let promotion_cta_text = item.acf.promotion_cta_text;
-
   if (!promotion_cta_text) {
-    promotion_cta_text = 'Missende CTA';
+    promotion_cta_text = 'Bekijk';
   }
   // Promo CTA tekst 
   const promotion_startdate = item.acf.promotion_startdate;
 
   //const promotion_startdateYear = promotion_startdate.substring(0, 4); // Extract year (first 4 characters)
-  const promotion_startdateMonth = item.acf.promotion_startdate.substring(4, 6); // Extract month (characters at index 4 and 5)
-  const promotion_startdateDay = item.acf.promotion_startdate.substring(6, 8); // Extract day (characters at index 6 and 7)
+  const promotion_startdateMonth = item.acf.promotion_startdate
+  ? item.acf.promotion_startdate.substring(4, 6)
+  : null; // Or provide a default value if necessary
+
+  //const promotion_startdateDay = item.acf.promotion_startdate.substring(6, 8)
+  
+  const promotion_startdateDay = item.acf.promotion_startdate
+  ? item.acf.promotion_startdate.substring(4, 6)
+  : null; // Or provide a default value if necessary
+  
+  
+  ; // Extract day (characters at index 6 and 7)
  
    function getMonthAbbreviation(promotion_startdateMonth) {
          const months = {
@@ -1974,7 +2106,7 @@ async function functionCamsItems(item) {
   const wordpressUrl = 'https://cms.frankwatching.com';
 
 
-// Get the ID of the attachment
+// Get the ID of the attachment 1
 const attachmentId = item.acf.promotion_image;
 let imageUrl; // Declare imageUrl variable outside the block
 
@@ -2004,25 +2136,68 @@ if (attachmentId) {
     });
 
 item_img_groot = imageUrl;
-  
-  const promotion_view = item.acfpromotion_view;
+
+
+
+// Get the ID of the attachment 2
+ const attachmentIdLarge = item.acf.promotion_image_large;
+ let imageUrlLarge; // Declare imageUrlLarge variable outside the block
+
+ let item_img_large = '';
+
+// // Check if attachmentId is null
+ if (attachmentIdLarge) {
+//   // Make a request to get the attachment details
+   fetch(wordpressUrl+`/wp-json/wp/v2/media/${attachmentIdLarge}`)
+     .then(response => response.json())
+     .then(attachmentData => {
+       if (attachmentData && attachmentData.source_url) {
+         const imageUrlLarge = attachmentData.guid.rendered;
+         item_img_large = imageUrlLarge;
+         console.log('Image URL:', imageUrlLarge);
+//         // Do whatever you need to do with imageUrlLarge inside this block
+       } else {
+         item_img_large = 'https://placehold.co/600x400  ';
+
+         console.log('No promotion image available');
+//         // Handle the case where the attachment doesn't have a source URL
+       }
+     })
+     .catch(error => {
+       console.error('Error fetching attachment data:', error);
+      
+     });
+
+ item_img_large = imageUrlLarge;
+    }
+
   let promotion_description = item.acf.promotion_description;
   if (!promotion_description) {
     promotion_description = 'Missende omschrijving';
   }
   const promotion_type = item.acf.promotion_type;
-  const promotion_utmcampaign = item.acf.promotion_utmcampaign;
+  const promotion_utmcampaign = item.acf.promotion_utmcampaignname;
   const utmcampaign = promotion_utmcampaign;
+
+
    
   const utm_parameters = `?utm_source=${blogAlert}-${utmtaglowercase}-${dagWeek}&amp;utm_medium=email&amp;utm_campaign=${utmcampaign}&amp;utm_content=%7c${sendDate}%7c${option}%7c`;
 
   var item_link = promotion_url+utm_parameters;
-
+  
   var maxCharacters = 160; // Define the maximum number of characters
 
-  var item_description = item.excerpt?.rendered ? item.excerpt.rendered.replace('<p>', '').replace('</p>', '').substring(0, maxCharacters) + '...' : '';
+   // item_description  
+   //let item_description = item.excerpt?.rendered ? item.excerpt.rendered.replace('<p>', '').replace('</p>', '').substring(0, maxCharacters) + '...' : '';
 
-   item_link = item.link + `?utm_source=${blogAlert}-${utmtaglowercase}-${dagWeek}&utm_medium=email&utm_campaign=|${postid}|${utmcampaign}&utm_content=%7c${sendDate}%7c${option}%7c`;
+   let item_description = item.acf.promotion_description;
+
+   if (!item_description) {
+    item_description = 'Missende inleiding';
+   } else {
+    item_description = item_description;
+
+   }
 
     /* add category */
     var item_categorie = '<div style="background: white;border-top:2px solid green;"><span class="categoryClassDag">'+dagWeek[0]+'</span>';
@@ -2037,7 +2212,8 @@ item_img_groot = imageUrl;
     //toon weergave pulldown
     item_categorie += '<span class="extraOptionsWeergave"><select id="selectOptionWeergave'+selectName+postid+'"><option value="">1.Kies weergave</option><option value="agenda">Agenda</option><option value="klein">Afb. links</option><option value="groot">Afb. boven</option><option value="grootcta">Afb. boven CTA</option><option value="campagnebalk">Campagnebalk</option><option value="headline">Headline</option></select></span>';
 
-    item_categorie += '<span class="extraOptions"><select id="selectOption'+selectName+postid+'"><option value="artikel">2.Kies utm content</option><optgroup label="Kennisbank"><option value="adv">adv</option><option value="advactueel">advactueel</option><option value="advthema">advthema</option></optgroup><optgroup label="Headline"><option value="headlineadv">headlineadv</option><option value="headlineadvactueel">headlineadvactueel</option><option value="headlineadvthema">headlineadvthema</option><option value="headlineonder">headlineonder</option></optgroup></select></span>';
+    item_categorie += '<span class="extraOptions"><select id="selectOption'+selectName+postid+'"><option value="adv">2.Kies utm content</option><optgroup label="Agenda"><option value="agenda">agenda</option></optgroup><optgroup label="Marketing"><option value="adv">adv</option><option value="advactueel">advactueel</option><option value="advthema">advthema</option></optgroup><optgroup label="Headline"><option value="headlineadv">headlineadv</option><option value="headlineadvactueel">headlineadvactueel</option><option value="headlineadvthema">headlineadvthema</option><option value="headlineonder">headlineonder</option></optgroup></select></span>';
+
     item_categorie += '<span class="extraOptionsLabel"><select id="selectOptionLabel'+selectName+postid+'"><option value="">3.Kies label</option><option value="themavdweek">Thema vd week</option><option value="adv">Adv</option><option value="tip">TIP</option></select></span>';
     item_categorie += '</div>';
     item_categorie += '<div style="background: white;"><span class="postTitle">'+item_title+'</span><span class="w100"></span></div>';
@@ -2064,7 +2240,7 @@ item_img_groot = imageUrl;
   divCat.innerHTML = item_categorie;
   const div = document.createElement('div');
   div.className = 'dragrow ' + labelNameLowercase ;
-  div.id = labelNameLowercase+postid;
+  div.id = labelNameLowercase+postid; 
   div.draggable = 'true';
 
   marketingContainerContent.appendChild(divCat);
@@ -2080,7 +2256,7 @@ item_img_groot = imageUrl;
     selectElement.addEventListener('change', function () {
       option = this.value; // Update the option variable with the selected value
       // Update item_link with the new option
-      item_link = item.link + `?utm_source=${blogAlert}-${utmtaglowercase}-${dagWeek}&utm_medium=email&utm_campaign=|${postid}|${utmcampaign}&utm_content=%7c${sendDate}%7c${option}%7c`;
+      item_link = promotion_url + `?utm_source=${blogAlert}-${utmtaglowercase}-${dagWeek}&utm_medium=email&utm_campaign=|${postid}|${utmcampaign}&utm_content=%7c${sendDate}%7c${option}%7c`;
       // Update the href attribute of the anchor tags with the new item_link
 
 
@@ -2190,7 +2366,7 @@ item_img_groot = imageUrl;
       <tr>
       <td style="font-size: 16px; vertical-align: top; width: 20px; color: #18608b;">▸</td>
       <td>
-        <a id="headlineItem${postid}a" class="headline" href="${item_link}" style="display: block; margin: 0px; color: #18608b; font-size: 16px; line-height: 1.3; font-family: 'Roboto', Arial;text-decoration: none;">${item_title} <span id="container_label_themavdweek${postid}">${label_themavdweek}</span></a>
+        <a id="headlineItem${postid}a" class="headline" href="${item_link}" style="display: block; margin: 0px; color: #18608b; font-size: 16px; line-height: 1.3; font-family: 'Roboto', Arial;text-decoration: none;">${promotion_title} <span id="container_label_themavdweek${postid}">${label_themavdweek}</span></a>
       </td>
       <td style="width: 30px;"><span id="container_label_adv${postid}">${label_adv}</span><span id="container_label_tip${postid}">${label_tip}</span></td>
       </tr>
@@ -2208,7 +2384,7 @@ item_img_groot = imageUrl;
       weergave = `<table class="table1a">
       <tbody>
         <tr>
-          <td class="tableDivider1a"><a id="imgKleinArtikel${postid}Link" href="${item_link}"><img id="imgKleinArtikel${postid}a" class="imgKleinArtikela" style="border-radius: 4px;object-fit: cover;height: auto; width: 100%; display: block;" height="175" src="${item_img_groot}" /></a></td>
+          <td class="tableDivider1a"><a id="imgKleinArtikel${postid}Link" href="${item_link}"><img id="imgKleinArtikel${postid}a" class="imgKleinArtikela" style="border-radius: 4px;object-fit: contain;height: auto; width: 100%; display: block;background: #000;min-height: inherit"  src="${item_img_large}" /></a></td>
         </tr>
       </tbody>
       </table>
@@ -2216,19 +2392,19 @@ item_img_groot = imageUrl;
       <tbody>
         <tr>
           <td class="tableDivider1" width="0px" height="auto" style="padding-bottom: 20px;">
-            <div class="tdDiv"><a id="imgKlein${postid}Link" href="${item_link}"><img id="imgKleinArtikel${postid}" class="imgKleinArtikel" style="border-radius: 4px;object-fit: cover;display: none; height: 150px; width: 175px;" width="175" src="${item_img_groot}" /></a></div>
+            <div class="tdDiv"><a id="imgKlein${postid}Link" href="${item_link}"><img id="imgKleinArtikel${postid}" class="imgKleinArtikel" style="border-radius: 4px;object-fit: cover;display: none; height: 150px; width: 175px;background: #000;;min-height: 150px" width="175" src="${item_img_groot}" /></a></div>
           </td>
           <td class="tableDivider2" height="auto" width="auto" style="vertical-align: top; padding-bottom: 20px;">
-            <table class="tableC">
+            <table class="tableC" style="margin: 0 !important; width: 100%;">
               <tbody>
                 <tr>
                   <td class="artikelKleinTDcA">
                   <span id="container_label_adv${postid}">${label_adv}</span>
                   <span id="container_label_themavdweek${postid}">${label_themavdweek}</span>
-                  <a id="kleinTitleLink${postid}" class="titleKleinArtikel" style="color: #1a1a1a; line-height: 1.3; margin-top: 0px; margin-bottom: 7px; top: 0px; display: block; font-size: 14pt; font-weight: 700; font-family: 'Roboto', Arial;text-decoration: none;" href="${item_link}">${item_title} <span id="container_label_tip${postid}">${label_tip}</span></a></td>
+                  <a id="kleinTitleLink${postid}" class="titleKleinArtikel" style="color: #1a1a1a; line-height: 1.3; margin-top: 0px; margin-bottom: 7px; top: 0px; display: block; font-size: 14pt; font-weight: 700; font-family: 'Roboto', Arial;text-decoration: none;" href="${item_link}">${promotion_title} <span id="container_label_tip${postid}">${label_tip}</span></a></td>
                 </tr>
                 <tr>
-                  <td><a id="DescriptionKleinArtikel${postid}" class="DescriptionKleinArtikel" style="color: #333333; font-size: 16px; line-height: 1.3; font-weight: regular; font-family: 'Roboto', Arial;text-decoration: none;" href="${item_link}">${item_description} <span id="KleinArtikelCTA${postid}" class="KleinArtikelCTA" style="text-decoration: none; color: #18608b; font-size: 12pt;"> Lees meer ▸</span></a></td>
+                  <td><a id="DescriptionKleinArtikel${postid}" class="DescriptionKleinArtikel" style="color: #333333; font-size: 16px; line-height: 1.3; font-weight: regular; font-family: 'Roboto', Arial;text-decoration: none;" href="${item_link}">${item_description} <span id="KleinArtikelCTA${postid}" class="KleinArtikelCTA" style="text-decoration: none; color: #18608b; font-size: 12pt;"> ${promotion_cta_text} ▸</span></a></td>
                 </tr>
               </tbody>
             </table>
@@ -2249,7 +2425,7 @@ item_img_groot = imageUrl;
         <tbody id="artikelGroot${postid}Tb">
           <tr id="artikelGroot${postid}TrC">
           <td id="artikelGroot${postid}TdC" style="padding-bottom: 5px;">
-              <a id="GrootArtikelCTA${postid}" class="GrootArtikelCTA" style="text-decoration: none;background: white;border-radius: 4px;font-family: 'Roboto', Arial;font-style: normal;font-weight: 700;font-size: 16px;line-height: 1.3;color: #018000; padding: 7px 10px; margin: 0px 0;  border: 1px solid #018000; display: block; "  href="${item_link}"><span id="container_label_tip${postid}">${label_tip}</span> ${promotion_announcement} ▸</a>
+              <a id="GrootArtikelCTA${postid}" class="GrootArtikelCTA" style="text-decoration: none;background: white;border-radius: 4px;font-family: 'Roboto', Arial;font-style: normal;font-weight: 700;font-size: 16px;line-height: 1.3;color: #018000; padding: 7px 10px; margin: 0px 0;  border: 1px solid #018000; display: block; "  href="${item_link}"><span id="container_label_tip${postid}">${label_tip}</span> ${promotion_title} ▸</a>
 
             </td>
           </tr>
@@ -2318,12 +2494,13 @@ item_img_groot = imageUrl;
       label_tip = '';
       label_themavdweek = '';
       typeweergave = 'grootcta';
-      weergave = `<table id="artikelGroot${postid}T" style=" display: block;">
+      weergave = `<table id="artikelGroot${postid}T" style="width: 100%;">
         <tbody id="artikelGroot${postid}Tb">
           <tr id="artikelGroot${postid}TrB">
           <td id="artikelGroot${postid}TdB">
               <a style="padding: 0px;" id="imgPost${postid}Link" href="${item_link}">
-                <img id="grootArtikelImg1" class="grootArtikelImg" style="border-radius: 4px;display: block; width: 100%;margin-bottom: 15px; height: auto; min-height: 192px;object-fit: contain; background: #ffffff;" src="${item_img_groot}" >
+                <img id="grootArtikelImg1" class="grootArtikelImg" style="    border-radius: 4px;
+    object-fit: cover;    display: block;    width: 100%;    margin-bottom: 15px;    min-height: 195px; max-height: 229px;    background: #000000;" height="229" src="${item_img_groot}" >
               </a>
             </td>
           </tr>
@@ -2331,7 +2508,7 @@ item_img_groot = imageUrl;
           <td id="artikelGroot${postid}TdA">
           <span id="container_label_themavdweek${postid}">${label_themavdweek}</span>
             <a id="grootTitleLink${postid}" class="grootArtikelTitle" style="color: #1a1a1a; display: block; line-height: 1.5; font-size: 18px; padding: 0px 0px 0px 0px; font-weight: 700;" href="${item_link}">
-              ${item_title} <span id="container_label_adv${postid}">${label_adv}</span> <span id="container_label_tip${postid}">${label_tip}</span>
+              ${promotion_title} <span id="container_label_adv${postid}">${label_adv}</span> <span id="container_label_tip${postid}">${label_tip}</span>
             </a>
           </td>
           </tr>
@@ -2352,12 +2529,13 @@ item_img_groot = imageUrl;
       label_tip = '';
       label_themavdweek = '';
       typeweergave = 'groot';
-      weergave = `<table id="artikelGroot${postid}T" style=" display: block;">
+      weergave = `<table id="artikelGroot${postid}T" style="width: 100%;">
         <tbody id="artikelGroot${postid}Tb">
           <tr id="artikelGroot${postid}TrB">
           <td id="artikelGroot${postid}TdB">
               <a style="padding: 0px;" id="imgPost${postid}Link" href="${item_link}">
-                <img id="grootArtikelImg1" class="grootArtikelImg" style="border-radius: 4px;object-fit: cover;display: block; width: 100%;margin-bottom: 15px; height: auto; min-height: 192px; object-fit: cover;" src="${item_img_groot}" >
+                <img id="grootArtikelImg1" class="grootArtikelImg"  style="    border-radius: 4px;
+    object-fit: cover;    display: block;    width: 100%;    margin-bottom: 15px;    min-height: 195px; max-height: 229px;    background: #000000;" height="229" src="${item_img_groot}" >
               </a>
             </td>
           </tr>
@@ -2365,7 +2543,7 @@ item_img_groot = imageUrl;
           <td id="artikelGroot${postid}TdA">
           <span id="container_label_themavdweek${postid}">${label_themavdweek}</span>
             <a id="grootTitleLink${postid}" class="grootArtikelTitle" style="color: #1a1a1a; display: block; line-height: 1.5; font-size: 18px; padding: 0px 0px 0px 0px; font-weight: 700;text-decoration: none;" href="${item_link}">
-              ${item_title} <span id="container_label_adv${postid}">${label_adv}</span> <span id="container_label_tip${postid}">${label_tip}</span>
+              ${promotion_title} <span id="container_label_adv${postid}">${label_adv}</span> <span id="container_label_tip${postid}">${label_tip}</span>
             </a>
           </td>
           </tr>
@@ -2376,7 +2554,7 @@ item_img_groot = imageUrl;
                   ${item_description}
                 </span>
               
-              <span id="GrootArtikelCTA${postid}" class="GrootArtikelCTA" style="display: inline; font-size: 16px; line-height: 1.3; text-decoration: none; color: #18608b;font-weight: 400;"> Lees meer ▸</span></a>
+              <span id="GrootArtikelCTA${postid}" class="GrootArtikelCTA" style="display: inline; font-size: 16px; line-height: 1.3; text-decoration: none; color: #18608b;font-weight: 400;"> ${promotion_cta_text} ▸</span></a>
             </td>
           </tr>
         </tbody>
@@ -2433,7 +2611,7 @@ item_img_groot = imageUrl;
   } else if (typeweergave === 'headline' && optionlabel === 'adv') {
     styling = 'display: inline; border: 1px solid #018a00; color: #018a00; padding: 1px 2px; font-size: 9px;';
   } else if (typeweergave === 'headline' && optionlabel === 'tip') {
-    styling = 'display: inline; border: 1px solid #018a00; color: #018a00; padding: 1px 2px; font-size: 9px;';
+    styling = 'display: inline; border: 1px solid #757575; color: #757575; padding: 1px 2px; font-size: 9px;';
   } else if (typeweergave === 'headline' && optionlabel === 'themavdweek') {
     styling = 'display: inline; border: 1px solid #018a00; color: #018a00; font-size: 11px; vertical-align: middle; padding: 2px 6px;';
   } else if (typeweergave === 'agenda' && optionlabel === 'adv') {
@@ -2455,6 +2633,7 @@ item_img_groot = imageUrl;
   // Inside the optionlabel conditions
   if (optionlabel === 'adv') {
     label_themavdweek = '';
+    label_tip = '';
     label_adv = `<span style="${styling};">ADV</span>`; 
   } else if (optionlabel === 'tip') {
     label_adv = '';
@@ -2462,9 +2641,11 @@ item_img_groot = imageUrl;
     label_themavdweek = ``; 
   } else if (optionlabel === 'themavdweek') {
     label_adv = '';
+    label_tip = '';
     label_themavdweek = `<div style="${styling};">THEMA VAN DE WEEK</div>`; 
   } else {
     label_adv = '';
+    label_tip = '';
     label_themavdweek = ''; 
   }
 
@@ -2763,7 +2944,7 @@ async function functionChannelItems(item) {
                   <tr id="artikelGroot${postid}TrB">
                   <td id="artikelGroot${postid}TdB">
                       <a style="padding: 0px;" id="imgPost${postid}Link" href="${item_link}">
-                        <img id="grootArtikelImg1" class="grootArtikelImg" style="border-radius: 4px;object-fit: cover;display: block; width: 100%;margin-bottom: 15px; height: auto; min-height: 192px; object-fit: cover;" src="${item_img_groot}" >
+                        <img id="grootArtikelImg1" class="grootArtikelImg" style="border-radius: 4px;object-fit: cover;display: block; width: 100%;margin-bottom: 15px; height: auto; min-height: 192px; max-height: 229px; object-fit: cover;background: #000000" height="229" src="${item_img_groot}" >
                       </a>
                     </td>
                   </tr>
@@ -2839,7 +3020,7 @@ async function functionChannelItems(item) {
           } else if (typeweergave === 'headline' && optionlabel === 'adv') {
             styling = 'display: inline; border: 1px solid #018a00; color: #018a00; padding: 1px 2px; font-size: 9px;';
           } else if (typeweergave === 'headline' && optionlabel === 'tip') {
-            styling = 'display: inline; border: 1px solid #018a00; color: #018a00; padding: 1px 2px; font-size: 9px;';
+            styling = 'display: inline; border: 1px solid #757575; color: #757575; padding: 1px 2px; font-size: 9px;';
           } else if (typeweergave === 'headline' && optionlabel === 'themavdweek') {
             styling = 'display: inline; border: 1px solid #018a00; color: #018a00; font-size: 11px; vertical-align: middle; padding: 2px 6px;';
           } else {
@@ -3235,7 +3416,7 @@ async function functiondownloadItems(item) {
                   <tr id="artikelGroot${postid}TrB">
                   <td id="artikelGroot${postid}TdB">
                       <a style="padding: 0px;" id="imgPost${postid}Link" href="${item_link}">
-                        <img id="grootArtikelImg1" class="grootArtikelImg" style="border-radius: 4px;display: block; width: 100%;margin-bottom: 15px; height: auto; min-height: 192px; object-fit: contain; background: #ffffff;" src="${item_img_groot}" >
+                        <img id="grootArtikelImg1" class="grootArtikelImg" style="border-radius: 4px;display: block; width: 100%;margin-bottom: 15px; height: auto; min-height: 192px; max-height: 229px; object-fit: contain; background: #000000;" height="229" src="${item_img_groot}" >
                       </a>
                     </td>
                   </tr>
@@ -3270,7 +3451,7 @@ async function functiondownloadItems(item) {
                   <tr id="artikelGroot${postid}TrB">
                   <td id="artikelGroot${postid}TdB">
                       <a style="padding: 0px;" id="imgPost${postid}Link" href="${item_link}">
-                        <img id="grootArtikelImg1" class="grootArtikelImg" style="border-radius: 4px;display: block; width: 100%;margin-bottom: 15px; height: auto; min-height: 192px; object-fit: contain; background: #ffffff;" src="${item_img_groot}" >
+                        <img id="grootArtikelImg1" class="grootArtikelImg" style="border-radius: 4px;display: block; width: 100%;margin-bottom: 15px; height: auto; min-height: 192px;  max-height: 229px; object-fit: contain; background: #000000;" height="229" src="${item_img_groot}" >
                       </a>
                     </td>
                   </tr>
@@ -3346,7 +3527,7 @@ async function functiondownloadItems(item) {
           } else if (typeweergave === 'headline' && optionlabel === 'adv') {
             styling = 'display: inline; border: 1px solid #018a00; color: #018a00; padding: 1px 2px; font-size: 9px;';
           } else if (typeweergave === 'headline' && optionlabel === 'tip') {
-            styling = 'display: inline; border: 1px solid #018a00; color: #018a00; padding: 1px 2px; font-size: 9px;';
+            styling = 'display: inline; border: 1px solid #757575; color: #757575; padding: 1px 2px; font-size: 9px;';
           } else if (typeweergave === 'headline' && optionlabel === 'themavdweek') {
             styling = 'display: inline; border: 1px solid #018a00; color: #018a00; font-size: 11px; vertical-align: middle; padding: 2px 6px;';
           } else if (typeweergave === 'grootcta' && optionlabel === 'adv') {

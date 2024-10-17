@@ -106,7 +106,7 @@ const options = [
   { value: 'downloadItemKleinContainer', text: 'Kennisbank' },
   { value: 'vacatureContainer', text: 'Jobs' },
   { value: 'themaContainer', text: 'Themanieuwsbrieven' },
-  //{ value: 'marketingContainer', text: 'Cams 2.0' },
+  { value: 'marketingContainer', text: 'Marketing' },
   //{ value: 'channelContainer', text: 'BC' },
     // Add other options as needed
 ];
